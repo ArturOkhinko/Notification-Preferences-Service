@@ -1,6 +1,27 @@
 import { pool } from '../infra/db';
 import { QuietHours } from '../domain/types';
 
+interface QuietHoursRow {
+  start_time: string;
+  end_time: string;
+  timezone: string;
+}
+
+const toQuietHours = (row: QuietHoursRow): QuietHours => ({
+  startTime: row.start_time.slice(0, 5),
+  endTime: row.end_time.slice(0, 5),
+  timezone: row.timezone,
+});
+
+const findByUser = async (userId: string): Promise<QuietHours | null> => {
+  const result = await pool.query<QuietHoursRow>(
+    'SELECT start_time, end_time, timezone FROM quiet_hours WHERE user_id = $1',
+    [userId],
+  );
+  const row = result.rows[0];
+  return row ? toQuietHours(row) : null;
+};
+
 const upsertQuietHours = async (
   userId: string,
   quietHours: QuietHours,
@@ -16,4 +37,4 @@ const upsertQuietHours = async (
   );
 };
 
-export default { upsertQuietHours };
+export default { findByUser, upsertQuietHours };

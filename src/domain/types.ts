@@ -20,3 +20,5 @@ export interface PreferencesUpdate {
   preference?: Preference;
   quietHours?: QuietHours;
 }
+
+export type Region = string;
