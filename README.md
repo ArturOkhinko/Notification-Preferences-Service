@@ -1,6 +1,9 @@
 # Notification Preferences Service
 
 Сервис управления предпочтениями уведомлений.
+
+CLAUDE.md файл оставил в репозитории специально. Потому что в описании вакансии встретил "Интерес к AI‑assisted development" в разделе "Кого ищем"
+
 Стек: TypeScript, Node.js (Express), PostgreSQL, Zod, Jest.
 
 ## Запуск
