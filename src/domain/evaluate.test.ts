@@ -1,4 +1,8 @@
-import { evaluateNotification, isInQuietHours, EvaluationContext } from './evaluate';
+import {
+  evaluateNotification,
+  isInQuietHours,
+  EvaluationContext,
+} from './evaluate';
 import { Preference, QuietHours } from './types';
 
 const preferences: Preference[] = [
@@ -108,21 +112,21 @@ describe('evaluateNotification', () => {
 
 describe('isInQuietHours', () => {
   it('is true just before the overnight interval ends', () => {
-    expect(
-      isInQuietHours(new Date('2026-05-22T05:59:00Z'), berlinNight),
-    ).toBe(true);
+    expect(isInQuietHours(new Date('2026-05-22T05:59:00Z'), berlinNight)).toBe(
+      true,
+    );
   });
 
   it('is false exactly when the interval ends', () => {
-    expect(
-      isInQuietHours(new Date('2026-05-22T06:00:00Z'), berlinNight),
-    ).toBe(false);
+    expect(isInQuietHours(new Date('2026-05-22T06:00:00Z'), berlinNight)).toBe(
+      false,
+    );
   });
 
   it('is true exactly when the interval starts', () => {
-    expect(
-      isInQuietHours(new Date('2026-05-21T20:00:00Z'), berlinNight),
-    ).toBe(true);
+    expect(isInQuietHours(new Date('2026-05-21T20:00:00Z'), berlinNight)).toBe(
+      true,
+    );
   });
 
   it('supports an interval inside one day', () => {
@@ -132,8 +136,12 @@ describe('isInQuietHours', () => {
       timezone: 'UTC',
     };
 
-    expect(isInQuietHours(new Date('2026-05-21T13:00:00Z'), daytime)).toBe(true);
-    expect(isInQuietHours(new Date('2026-05-21T15:00:00Z'), daytime)).toBe(false);
+    expect(isInQuietHours(new Date('2026-05-21T13:00:00Z'), daytime)).toBe(
+      true,
+    );
+    expect(isInQuietHours(new Date('2026-05-21T15:00:00Z'), daytime)).toBe(
+      false,
+    );
   });
 
   it('treats equal start and end as no quiet hours', () => {

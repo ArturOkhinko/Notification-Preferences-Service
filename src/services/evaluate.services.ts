@@ -1,6 +1,8 @@
 import { evaluateNotification, EvaluationResult } from '../domain/evaluate';
 import { mergePreferences } from '../domain/preferences';
 import { Channel, NotificationType, Region } from '../domain/types';
+import { logger } from '../infra/logger';
+import { metrics } from '../infra/metrics';
 import globalPoliciesRepository from '../repositories/globalPolicies.repository';
 import preferencesRepository from '../repositories/preferences.repository';
 import quietHoursRepository from '../repositories/quietHours.repository';
@@ -13,19 +15,23 @@ export interface EvaluateInput {
   datetime: Date;
 }
 
-const logDecision = (input: EvaluateInput, result: EvaluationResult): void => {
-  console.log(
-    JSON.stringify({
-      event: 'notification_evaluated',
-      userId: input.userId,
-      notificationType: input.notificationType,
-      channel: input.channel,
-      region: input.region,
-      datetime: input.datetime.toISOString(),
-      decision: result.decision,
-      reason: result.reason,
-    }),
-  );
+const reportDecision = (
+  input: EvaluateInput,
+  result: EvaluationResult,
+): void => {
+  logger.info('notification_evaluated', {
+    userId: input.userId,
+    notificationType: input.notificationType,
+    channel: input.channel,
+    region: input.region,
+    datetime: input.datetime.toISOString(),
+    decision: result.decision,
+    reason: result.reason,
+  });
+  metrics.increment('evaluate_decisions_total', {
+    decision: result.decision,
+    reason: result.reason,
+  });
 };
 
 const evaluate = async (input: EvaluateInput): Promise<EvaluationResult> => {
@@ -49,7 +55,7 @@ const evaluate = async (input: EvaluateInput): Promise<EvaluationResult> => {
     quietHours,
   });
 
-  logDecision(input, result);
+  reportDecision(input, result);
   return result;
 };
 
