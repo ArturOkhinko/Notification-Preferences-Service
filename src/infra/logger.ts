@@ -14,6 +14,8 @@ const write = (level: string, event: string, fields: LogFields): void => {
 export const logger = {
   info: (event: string, fields: LogFields = {}): void =>
     write('info', event, fields),
+  warn: (event: string, fields: LogFields = {}): void =>
+    write('warn', event, fields),
   error: (event: string, fields: LogFields = {}): void =>
     write('error', event, fields),
 };
