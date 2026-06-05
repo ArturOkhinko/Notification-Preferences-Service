@@ -15,3 +15,8 @@ export interface QuietHours {
   endTime: string;
   timezone: string;
 }
+
+export interface PreferencesUpdate {
+  preference?: Preference;
+  quietHours?: QuietHours;
+}

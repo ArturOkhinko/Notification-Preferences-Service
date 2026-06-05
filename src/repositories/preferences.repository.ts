@@ -28,4 +28,17 @@ const findUserOverrides = async (userId: string): Promise<Preference[]> => {
   return result.rows.map(toPreference);
 };
 
-export default { findDefaults, findUserOverrides };
+const upsertUserPreference = async (
+  userId: string,
+  pref: Preference,
+): Promise<void> => {
+  await pool.query(
+    `INSERT INTO user_preferences (user_id, notification_type, channel, enabled)
+     VALUES ($1, $2, $3, $4)
+     ON CONFLICT (user_id, notification_type, channel)
+     DO UPDATE SET enabled = EXCLUDED.enabled, updated_at = now()`,
+    [userId, pref.notificationType, pref.channel, pref.enabled],
+  );
+};
+
+export default { findDefaults, findUserOverrides, upsertUserPreference };
